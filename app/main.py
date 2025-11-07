@@ -552,7 +552,12 @@ class MyWindow(QMainWindow):
 
         x = self.train_worker.training.time
         actual = self.train_worker.training.actual
-        prediction = self.train_worker.training.prediction
+        prediction = self.train_worker.training.estimation
+
+        # Convert to numpy arrays and flatten to 1D if needed (pyqtgraph requires 1D arrays)
+        x = np.asarray(x).flatten()
+        actual = np.asarray(actual).flatten()
+        prediction = np.asarray(prediction).flatten()
 
         self.pw1.addLegend()
         self.pw1.plot(x, actual, name="Actual", pen=pg.mkPen(color='r',width=3), symbol="o", symbolBrush="r")
