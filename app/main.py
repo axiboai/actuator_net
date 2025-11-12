@@ -450,14 +450,14 @@ class MyWindow(QMainWindow):
 
 
     def slot_plot_data(self):
-        r_symbol = random.choice(['o', 's', 't', 't1', 't2', 't3', 'd', '+', 'x', 'p', 'h', 'star'])
         r_color = random.choice(['b', 'g', 'r', 'c', 'm', 'y', 'k', 'd', 'l', 's'])
         assert self.data_start +self.plot_data_len < self.data_end
         y = self.dp_worker.pd_data.loc[self.data_start:self.data_start+self.plot_data_len,self.plot_data_name].values
         x = np.linspace(0,len(y)/self.sample_freq,len(y))
 
         self.pw1.addLegend()
-        self.pw1.plot(x, y, name=self.plot_data_name, pen=pg.mkPen(color=r_color,width=3), symbol=r_symbol, symbolBrush=r_color) #如果不设后面参数则显示点的形状为正常点
+        # Omit symbol for cleaner line plot, or use symbolSize=1 for very small markers
+        self.pw1.plot(x, y, name=self.plot_data_name, pen=pg.mkPen(color=r_color,width=3))
         #self.pw1.plot(x, y,  symbol=r_symbol, symbolBrush=r_color) #如果不设后面参数则显示点的形状为正常点
         #self.pw1.plot(x, y, name=self.plot_data_name,symbol=r_symbol, symbolBrush=r_color) #如果不设后面参数则显示点的形状为正常点
         self.pw1.showGrid(x=True, y=True, alpha=0.3)
@@ -546,8 +546,6 @@ class MyWindow(QMainWindow):
 
 
     def slot_btn_showResult(self):
-        r_symbol = random.choice(['o', 's', 't', 't1', 't2', 't3', 'd', '+', 'x', 'p', 'h', 'star'])
-        r_color = random.choice(['b', 'g', 'r', 'c', 'm', 'y', 'k', 'd', 'l', 's'])
         self.pw1.clear()
 
         x = self.train_worker.training.time
@@ -560,8 +558,9 @@ class MyWindow(QMainWindow):
         prediction = np.asarray(prediction).flatten()
 
         self.pw1.addLegend()
-        self.pw1.plot(x, actual, name="Actual", pen=pg.mkPen(color='r',width=3), symbol="o", symbolBrush="r")
-        self.pw1.plot(x, prediction, name="Prediction", pen=pg.mkPen(color='b',width=3), symbol="s", symbolBrush="b")
+        # Omit symbol for cleaner line plot, or use symbolSize=1 for very small markers
+        self.pw1.plot(x, actual, name="Actual", pen=pg.mkPen(color='r',width=3))
+        self.pw1.plot(x, prediction, name="Prediction", pen=pg.mkPen(color='b',width=3))
         self.pw1.showGrid(x=True, y=True, alpha=0.3)
         self.text_browser.append("Plot prediction results!")
 
